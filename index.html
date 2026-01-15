@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>救救孩子的听力吧</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        /* 欢迎页面样式 */
+        .welcome-page {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-logo {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .welcome-subtitle {
+            font-size: 24px;
+            color: #555;
+            margin-bottom: 40px;
+        }
+
+        .welcome-description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .feature-item {
+            flex: 1;
+            min-width: 200px;
+            margin: 10px;
+            padding: 20px;
+            background-color: #f9fbfd;
+            border-radius: 8px;
+            border: 1px solid #e8f4f8;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            color: #2ecc71;
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .feature-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .btn-start {
+            background-color: #3498db;
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .btn-start:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 进度显示样式 */
+        .progress-container {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f9fbfd;
+            border-radius: 8px;
+            border: 1px solid #e8f4f8;
+        }
+
+        .progress-info {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            width: 7.14%; /* 初始进度：1/14 */
+        }
+
+        .question-group {
+            margin-bottom: 40px;
+            display: none;
+        }
+
+        .question-group.active {
+            display: block;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9fbfd;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .option:hover {
+            background-color: #e8f4f8;
+        }
+
+        .option input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            color: #34495e;
+            flex: 1;
+        }
+
+        .option.correct {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+
+        .option.incorrect {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* 新增：题组总结语样式 */
+        .group-summary {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #eef7fc;
+            border: 1px solid #d1e7dd;
+            color: #2c3e50;
+            line-height: 1.6;
+            display: none; /* 默认隐藏，校对后显示 */
+        }
+
+        .btn-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        .btn-check:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-next {
+            background-color: #2ecc71;
+            color: #fff;
+            display: none;
+        }
+
+        .btn-next:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-home {
+            background-color: #95a5a6;
+            color: #fff;
+        }
+
+        .btn-home:hover {
+            background-color: #7f8c8d;
+        }
+
+        .result-tip {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #2c3e50;
+            display: none;
+        }
+
+        .complete {
+            text-align: center;
+            color: #27ae60;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 50px;
+            display: none;
+        }
+
+        /* 页面容器 */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 欢迎页面 -->
+        <div class="page active" id="welcome-page">
+            <div class="welcome-page">
+                <div class="welcome-logo">🎧 英语听力复习</div>
+                <h1 class="welcome-subtitle">英语听力选择题复习</h1>
+                <p class="welcome-description">
+                    欢迎使用英语听力选择题复习系统！本系统包含多个听力练习组，每个练习组有4个选择题。
+                    你可以通过点击下方的"开始练习"按钮进入练习模式，完成后系统会自动评分并显示正确答案。
+                    祝你学习愉快！
+                </p>
+                <div class="features">
+                    <div class="feature-item">
+                        <div class="feature-icon">📚</div>
+                        <div class="feature-title">丰富的练习内容</div>
+                        <div class="feature-description">包含多个听力练习组，涵盖不同场景和话题</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-title">智能评分系统</div>
+                        <div class="feature-description">自动评分并显示正确答案，帮助你快速提高</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-title">详细的解析</div>
+                        <div class="feature-description">每个练习组都有详细的总结解析，加深理解</div>
+                    </div>
+                </div>
+                <button class="btn-start" onclick="startPractice()">开始练习</button>
+            </div>
+        </div>
+
+        <!-- 练习页面 -->
+        <div class="page" id="practice-page">
+            <h1 class="title">英语听力选择题复习</h1>
+
+            <!-- 题组进度显示 -->
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span>当前进度：</span>
+                    <span id="current-progress">1/14</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- 题组容器（所有题组） -->
+            <div class="question-groups">
+                <!-- 题组1 -->
+                <div class="question-group active" data-group="1">
+                <div class="question" data-answer="D">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q1-1" id="q1-1-A">
+                        <label for="q1-1-A">How to raise kids.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-1" id="q1-1-B">
+                        <label for="q1-1-B">How to be a good surfer.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-1" id="q1-1-C">
+                        <label for="q1-1-C">How tiring their work is.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-1" id="q1-1-D">
+                        <label for="q1-1-D">How to spend the weekend.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q1-2" id="q1-2-A">
+                        <label for="q1-2-A">He wants a challenge.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-2" id="q1-2-B">
+                        <label for="q1-2-B">It helps solve his sleep problem.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-2" id="q1-2-C">
+                        <label for="q1-2-C">He likes the waves and the breeze.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-2" id="q1-2-D">
+                        <label for="q1-2-D">It reminds him of his carefree days as a teenager.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="C">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q1-3" id="q1-3-A">
+                        <label for="q1-3-A">Surfing with her kids.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-3" id="q1-3-B">
+                        <label for="q1-3-B">Collecting seashells with her kids.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-3" id="q1-3-C">
+                        <label for="q1-3-C">Watching her kids play on the beach.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-3" id="q1-3-D">
+                        <label for="q1-3-D">Building towers and bridges with her kids.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="A">
+                    <div class="question-number">4</div>
+                    <div class="option">
+                        <input type="radio" name="q1-4" id="q1-4-A">
+                        <label for="q1-4-A">Building sandcastles.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-4" id="q1-4-B">
+                        <label for="q1-4-B">Swimming in the sea.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-4" id="q1-4-C">
+                        <label for="q1-4-C">Taking long walks on the beach.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1-4" id="q1-4-D">
+                        <label for="q1-4-D">Playfully burying each other in the sand.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组1总结语 -->
+                <div class="group-summary">
+                    如何度过周末，这让他想起了他十几岁时无忧无虑的日子，看着孩子们在沙滩上玩耍，堆沙堡，他很开心。
+                </div>
+            </div>
+
+            <!-- 题组2 -->
+            <div class="question-group" data-group="2">
+                <div class="question" data-answer="C">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q2-1" id="q2-1-A">
+                        <label for="q2-1-A">She could wear her new yellow dress.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-1" id="q2-1-B">
+                        <label for="q2-1-B">She was going to have a vanilla ice cream.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-1" id="q2-1-C">
+                        <label for="q2-1-C">She won the spelling competition at her school.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-1" id="q2-1-D">
+                        <label for="q2-1-D">She was going to the state capital for a competition.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q2-2" id="q2-2-A">
+                        <label for="q2-2-A">He performed in a play at a large theater.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-2" id="q2-2-B">
+                        <label for="q2-2-B">His family bought him a new suit and tie.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-2" id="q2-2-C">
+                        <label for="q2-2-C">His family moved to Sacramento to settle down.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-2" id="q2-2-D">
+                        <label for="q2-2-D">He went to Sacramento for a spelling competition.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q2-3" id="q2-3-A">
+                        <label for="q2-3-A">To congratulate him on winning a prize.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-3" id="q2-3-B">
+                        <label for="q2-3-B">To wish him good luck in the next competition.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-3" id="q2-3-C">
+                        <label for="q2-3-C">To apologize for not buying him some ice cream.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-3" id="q2-3-D">
+                        <label for="q2-3-D">To make him feel better after he lost first prize.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="B">
+                    <div class="question-number">4</div>
+                    <div class="option">
+                        <input type="radio" name="q2-4" id="q2-4-A">
+                        <label for="q2-4-A">She felt pity for her dad.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-4" id="q2-4-B">
+                        <label for="q2-4-B">She was very proud of her dad.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-4" id="q2-4-C">
+                        <label for="q2-4-C">She asked her dad about his secrets to success.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2-4" id="q2-4-D">
+                        <label for="q2-4-D">She wanted to celebrate it with vanilla ice cream.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组2总结语 -->
+                <div class="group-summary">
+                    她赢得了学校的比赛，得知父亲去参加了一场拼写比赛，尽管与一等奖失之交臂，但她仍为他的父亲感到骄傲。
+                </div>
+            </div>
+
+            <!-- 题组3 -->
+            <div class="question-group" data-group="3">
+                <div class="question" data-answer="D">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q3-1" id="q3-1-A">
+                        <label for="q3-1-A">She wanted to be tough.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-1" id="q3-1-B">
+                        <label for="q3-1-B">She once did it in college.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-1" id="q3-1-C">
+                        <label for="q3-1-C">Her sister invited her to do it.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-1" id="q3-1-D">
+                        <label for="q3-1-D">Her sister did it and enjoyed it.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="C">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q3-2" id="q3-2-A">
+                        <label for="q3-2-A">Last year.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-2" id="q3-2-B">
+                        <label for="q3-2-B">Last week.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-2" id="q3-2-C">
+                        <label for="q3-2-C">In college.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-2" id="q3-2-D">
+                        <label for="q3-2-D">In high school.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="A">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q3-3" id="q3-3-A">
+                        <label for="q3-3-A">He finds it boring.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-3" id="q3-3-B">
+                        <label for="q3-3-B">He finds it exciting.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-3" id="q3-3-C">
+                        <label for="q3-3-C">He finds it rewarding.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-3" id="q3-3-D">
+                        <label for="q3-3-D">He finds it challenging.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">4</div>
+                    <div class="option">
+                        <input type="radio" name="q3-4" id="q3-4-A">
+                        <label for="q3-4-A">She may scare away the fish.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-4" id="q3-4-B">
+                        <label for="q3-4-B">She has to swim in dirty water.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-4" id="q3-4-C">
+                        <label for="q3-4-C">There may be too many people in the lake.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3-4" id="q3-4-D">
+                        <label for="q3-4-D">There may be giant fish attacking her in the lake.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组3总结语 -->
+                <div class="group-summary">
+                    她姐姐做过并且很喜欢，所以她在大学也做。男孩觉得很无聊，女孩怕被鱼攻击。
+                </div>
+            </div>
+
+            <!-- 题组4 -->
+            <div class="question-group" data-group="4">
+                <div class="question" data-answer="D">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q4-1" id="q4-1-A">
+                        <label for="q4-1-A">She comes late to class from time to time.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-1" id="q4-1-B">
+                        <label for="q4-1-B">She impresses the man with her performance.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-1" id="q4-1-C">
+                        <label for="q4-1-C">She has no difficulty finishing the assignments.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-1" id="q4-1-D">
+                        <label for="q4-1-D">She often fails to turn in her homework on time.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="A">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q4-2" id="q4-2-A">
+                        <label for="q4-2-A">It presents great difficulty for her.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-2" id="q4-2-B">
+                        <label for="q4-2-B">It makes her lose interest in French.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-2" id="q4-2-C">
+                        <label for="q4-2-C">It enables her to help her father in business.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-2" id="q4-2-D">
+                        <label for="q4-2-D">It improves her performance in other subjects.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q4-3" id="q4-3-A">
+                        <label for="q4-3-A">He dislikes giving advice to his students.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-3" id="q4-3-B">
+                        <label for="q4-3-B">He thinks the woman has a gift for French.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-3" id="q4-3-C">
+                        <label for="q4-3-C">He scolds the woman for challenging his authority.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-3" id="q4-3-D">
+                        <label for="q4-3-D">He has a good personal relationship with the woman.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="C">
+                    <div class="question-number">4</div>
+                    <div class="option">
+                        <input type="radio" name="q4-4" id="q4-4-A">
+                        <label for="q4-4-A">Engage in creative activities.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-4" id="q4-4-B">
+                        <label for="q4-4-B">Try her best to please her father.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-4" id="q4-4-C">
+                        <label for="q4-4-C">Work harder in her French class.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4-4" id="q4-4-D">
+                        <label for="q4-4-D">Exercise to strengthen her muscles.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组4总结语 -->
+                <div class="group-summary">
+                    她不能按时交作业，这对她来说很困难，但是老师和女孩私人关系好，所以激励她在法语课上更加努力。
+                </div>
+            </div>
+
+            <!-- 题组5 -->
+            <div class="question-group" data-group="5">
+                <div class="question" data-answer="B">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q5-1" id="q5-1-A">
+                        <label for="q5-1-A">Many plants are sick because of the lack of sunlight.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-1" id="q5-1-B">
+                        <label for="q5-1-B">There are so many plants that it is hard to see the sky.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-1" id="q5-1-C">
+                        <label for="q5-1-C">The plants struggle hard to reach the sun or the sky above.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-1" id="q5-1-D">
+                        <label for="q5-1-D">The plants are more spectacular than she has ever dreamed.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q5-2" id="q5-2-A">
+                        <label for="q5-2-A">They enjoy being so far away from technology.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-2" id="q5-2-B">
+                        <label for="q5-2-B">They live miles and miles away from each other.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-2" id="q5-2-C">
+                        <label for="q5-2-C">They never travel more than 15 miles along the river.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-2" id="q5-2-D">
+                        <label for="q5-2-D">They are separated from the world outside of the jungle.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="A">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q5-3" id="q5-3-A">
+                        <label for="q5-3-A">Emily gave her an empty bottle.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-3" id="q5-3-B">
+                        <label for="q5-3-B">Emily gave her a bottle of water.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-3" id="q5-3-C">
+                        <label for="q5-3-C">Emily helped her win a big prize.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-3" id="q5-3-D">
+                        <label for="q5-3-D">Emily showed her a great treasure.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="A">
+                    <div class="question-number">4</div>
+                    <div class="option">
+                        <input type="radio" name="q5-4" id="q5-4-A">
+                        <label for="q5-4-A">Small and common things should also be valued.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-4" id="q5-4-B">
+                        <label for="q5-4-B">Local people in the rainforest are easier to please.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-4" id="q5-4-C">
+                        <label for="q5-4-C">Life can be quite difficult without modern technology.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5-4" id="q5-4-D">
+                        <label for="q5-4-D">Local people in the rainforest take their own lives for granted.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组5总结语 -->
+                <div class="group-summary">
+                    植物太多很难看到天空，使他们与丛林之外的世界隔绝，艾米给了她一个空瓶子，告诉她普通的食物也应该被珍惜。
+                </div>
+            </div>
+
+            <!-- 题组6 -->
+            <div class="question-group" data-group="6">
+                <div class="question" data-answer="B">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q6-1" id="q6-1-A">
+                        <label for="q6-1-A">She plans to do a part-time fast-food job.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-1" id="q6-1-B">
+                        <label for="q6-1-B">She does not know where to start for her job.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-1" id="q6-1-C">
+                        <label for="q6-1-C">She plans to find an internship after this semester.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-1" id="q6-1-D">
+                        <label for="q6-1-D">She is scared by the idea of taking a part-time job.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="A">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q6-2" id="q6-2-A">
+                        <label for="q6-2-A">Seek help from the Career Center.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-2" id="q6-2-B">
+                        <label for="q6-2-B">Quit her job at the fast-food restaurant.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-2" id="q6-2-C">
+                        <label for="q6-2-C">Review her résumé carefully by herself.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-2" id="q6-2-D">
+                        <label for="q6-2-D">Try to get an internship at an international company.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="C">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q6-3" id="q6-3-A">
+                        <label for="q6-3-A">He went to the Student Union.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-3" id="q6-3-B">
+                        <label for="q6-3-B">He went over to the Career Center.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-3" id="q6-3-C">
+                        <label for="q6-3-C">He got information from the Internet.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-3" id="q6-3-D">
+                        <label for="q6-3-D">He sent his résumé to a few companies.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="B">
+                    <div class="question-number">4</div>
+                    <div class="option">
+                        <input type="radio" name="q6-4" id="q6-4-A">
+                        <label for="q6-4-A">A job offer.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-4" id="q6-4-B">
+                        <label for="q6-4-B">A good plan.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-4" id="q6-4-C">
+                        <label for="q6-4-C">An internship.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6-4" id="q6-4-D">
+                        <label for="q6-4-D">Career information.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组6总结语 -->
+                <div class="group-summary">
+                    她不知道从哪找工作，于是向职业中心寻求帮助。听后他开始从互联网上获取信息，制定了一个好计划。
+                </div>
+            </div>
+
+            <!-- 题组7 -->
+            <div class="question-group" data-group="7">
+                <div class="question" data-answer="D">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q7-1" id="q7-1-A">
+                        <label for="q7-1-A">He told his grandmother funny stories.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-1" id="q7-1-B">
+                        <label for="q7-1-B">He cleaned up his grandmother’s apartment.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-1" id="q7-1-C">
+                        <label for="q7-1-C">He helped his grandmother move to Washington D.C.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-1" id="q7-1-D">
+                        <label for="q7-1-D">He taught his grandmother how to use electronic gadgets.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="B">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q7-2" id="q7-2-A">
+                        <label for="q7-2-A">She was afraid of learning anything new.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-2" id="q7-2-B">
+                        <label for="q7-2-B">It took her a long time to learn how to email.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-2" id="q7-2-C">
+                        <label for="q7-2-C">She forgot to attach documents to her emails.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-2" id="q7-2-D">
+                        <label for="q7-2-D">She didn’t know how to open and close emails.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q7-3" id="q7-3-A">
+                        <label for="q7-3-A">She refuses to have any new electronic gadgets.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-3" id="q7-3-B">
+                        <label for="q7-3-B">She has difficulty adapting to life in this new city.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-3" id="q7-3-C">
+                        <label for="q7-3-C">She suffers from depression after her husband passed away.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-3" id="q7-3-D">
+                        <label for="q7-3-D">She is not interested in learning how to use electronic items.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="B">
+                    <div class="question-number">4</div>
+                    <div class="option">
+                        <input type="radio" name="q7-4" id="q7-4-A">
+                        <label for="q7-4-A">Get her easy and fun PC golf games.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-4" id="q7-4-B">
+                        <label for="q7-4-B">Download tennis games on her computer.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-4" id="q7-4-C">
+                        <label for="q7-4-C">Spend time playing PC tennis games with her.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7-4" id="q7-4-D">
+                        <label for="q7-4-D">Buy her video games made for elderly people.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组7总结语 -->
+                <div class="group-summary">
+                    他教祖母使用电子设备，但她花了很长时间学会发邮件，可能因为她对学习使用电子产品不感兴趣，于是就在她的电脑上下载网球游戏。
+                </div>
+            </div>
+
+            <!-- 题组8 -->
+            <div class="question-group" data-group="8">
+                <div class="question" data-answer="D">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q8-1" id="q8-1-A">
+                        <label for="q8-1-A">To promote the sale of paper books.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-1" id="q8-1-B">
+                        <label for="q8-1-B">To promote online reading platforms.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-1" id="q8-1-C">
+                        <label for="q8-1-C">To encourage people in Los Angeles to read books.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-1" id="q8-1-D">
+                        <label for="q8-1-D">To provide a platform for authors to discuss their works.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="C">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q8-2" id="q8-2-A">
+                        <label for="q8-2-A">Trying food from other parts of the country.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-2" id="q8-2-B">
+                        <label for="q8-2-B">Buying discount books written by famous authors.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-2" id="q8-2-C">
+                        <label for="q8-2-C">Getting their books signed by their favorite authors.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-2" id="q8-2-D">
+                        <label for="q8-2-D">Attending all outdoor activities by paying a small fee.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="A">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q8-3" id="q8-3-A">
+                        <label for="q8-3-A">Various local foods are available.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-3" id="q8-3-B">
+                        <label for="q8-3-B">Only hot dogs and iced drinks are available.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-3" id="q8-3-C">
+                        <label for="q8-3-C">People have to bring their own food and drink.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-3" id="q8-3-D">
+                        <label for="q8-3-D">Food and drink are often sold out at the food court.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="A">
+                    <div class="question-number">4</div>
+                    <div class="option">
+                        <input type="radio" name="q8-4" id="q8-4-A">
+                        <label for="q8-4-A">They are surprisingly supportive.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-4" id="q8-4-B">
+                        <label for="q8-4-B">They are unwilling to have the festival.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-4" id="q8-4-C">
+                        <label for="q8-4-C">They feel fortunate to have the festival.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8-4" id="q8-4-D">
+                        <label for="q8-4-D">They are unclear about the purpose of the festival.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组8总结语 -->
+                <div class="group-summary">
+                    为了给作者提供一个讨论其作品的平台，让读者喜爱的作家在书上签名。那里提供了各种各样的当地美食可供选择，当地人出人意料地支持。
+                </div>
+            </div>
+
+            <!-- 题组9 -->
+            <div class="question-group" data-group="9">
+                <div class="question" data-answer="D">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q9-1" id="q9-1-A">
+                        <label for="q9-1-A">He fell onto the floor.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-1" id="q9-1-B">
+                        <label for="q9-1-B">He broke the milk bottle.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-1" id="q9-1-C">
+                        <label for="q9-1-C">He made a mess inside the refrigerator.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-1" id="q9-1-D">
+                        <label for="q9-1-D">He spilled milk all over the kitchen floor.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q9-2" id="q9-2-A">
+                        <label for="q9-2-A">She punished him.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-2" id="q9-2-B">
+                        <label for="q9-2-B">She shouted at him in anger.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-2" id="q9-2-C">
+                        <label for="q9-2-C">She gave him a long lecture.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-2" id="q9-2-D">
+                        <label for="q9-2-D">She cleaned up the mess with him.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="A">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q9-3" id="q9-3-A">
+                        <label for="q9-3-A">How to carry a milk bottle.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-3" id="q9-3-B">
+                        <label for="q9-3-B">How to put things in order.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-3" id="q9-3-C">
+                        <label for="q9-3-C">How to clean up spilled milk.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-3" id="q9-3-D">
+                        <label for="q9-3-D">How to do a scientific experiment.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="C">
+                    <div class="question-number">4</div>
+                    <div class="option">
+                        <input type="radio" name="q9-4" id="q9-4-A">
+                        <label for="q9-4-A">One should always keep learning.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-4" id="q9-4-B">
+                        <label for="q9-4-B">Life is just like scientific experiments.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-4" id="q9-4-C">
+                        <label for="q9-4-C">Mistakes can become learning opportunities.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9-4" id="q9-4-D">
+                        <label for="q9-4-D">One should be tolerant of other people's mistakes.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组9总结语 -->
+                <div class="group-summary">
+                    他把牛奶洒得厨房地板上到处都是，妈妈和他一起清理了残局，他学会了如何拿牛奶瓶，懂得了错误可以成为学习的机会。
+                </div>
+            </div>
+
+            <!-- 题组10 -->
+            <div class="question-group" data-group="10">
+                <div class="question" data-answer="B">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q10-1" id="q10-1-A">
+                        <label for="q10-1-A">The harm of sleep problems.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-1" id="q10-1-B">
+                        <label for="q10-1-B">The causes of sleep problems.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-1" id="q10-1-C">
+                        <label for="q10-1-C">The solutions to sleep problems.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-1" id="q10-1-D">
+                        <label for="q10-1-D">The symptoms of sleep problems.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="C">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q10-2" id="q10-2-A">
+                        <label for="q10-2-A">Unhealthy habits.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-2" id="q10-2-B">
+                        <label for="q10-2-B">Environmental factors.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-2" id="q10-2-C">
+                        <label for="q10-2-C">Stress from studies or work.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-2" id="q10-2-D">
+                        <label for="q10-2-D">Traveling across time zones.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q10-3" id="q10-3-A">
+                        <label for="q10-3-A">Having a small room.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-3" id="q10-3-B">
+                        <label for="q10-3-B">Having no sleep partner.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-3" id="q10-3-C">
+                        <label for="q10-3-C">Having a warm light on.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-3" id="q10-3-D">
+                        <label for="q10-3-D">Having a comfortable bed.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="B">
+                    <div class="question-number">4</div>
+                    <div class="option">
+                        <input type="radio" name="q10-4" id="q10-4-A">
+                        <label for="q10-4-A">Staying up late.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-4" id="q10-4-B">
+                        <label for="q10-4-B">Working the night shift.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-4" id="q10-4-C">
+                        <label for="q10-4-C">Having inconsistent meal times.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10-4" id="q10-4-D">
+                        <label for="q10-4-D">Exercising without a set schedule.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组10总结语 -->
+                <div class="group-summary">
+                    睡眠问题的原因，来自于学习和工作的压力，要拥有一张舒适的床，不要上夜班。
+                </div>
+            </div>
+
+            <!-- 题组11 -->
+            <div class="question-group" data-group="11">
+                <div class="question" data-answer="D">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q11-1" id="q11-1-A">
+                        <label for="q11-1-A">She worked ahead of schedule and skipped a level.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-1" id="q11-1-B">
+                        <label for="q11-1-B">She enjoyed the traditional method of learning Spanish.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-1" id="q11-1-C">
+                        <label for="q11-1-C">She felt discouraged while studying after skipping a level.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-1" id="q11-1-D">
+                        <label for="q11-1-D">She showed dissatisfaction with the slow pace of her class.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q11-2" id="q11-2-A">
+                        <label for="q11-2-A">She had to learn with a teacher she didn't like.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-2" id="q11-2-B">
+                        <label for="q11-2-B">She failed to pass the test required to skip a level.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-2" id="q11-2-C">
+                        <label for="q11-2-C">She had to study sentence structures and grammar.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-2" id="q11-2-D">
+                        <label for="q11-2-D">She had to learn the material that she already knew.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="C">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q11-3" id="q11-3-A">
+                        <label for="q11-3-A">It aroused in her a strong interest in Spanish culture.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-3" id="q11-3-B">
+                        <label for="q11-3-B">It excluded the use of other languages in the classroom.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-3" id="q11-3-C">
+                        <label for="q11-3-C">It proved to be an unbalanced way to learn the language.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-3" id="q11-3-D">
+                        <label for="q11-3-D">It explored the cultural and language elements in great depth.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="C">
+                    <div class="question-number">4</div>
+                    <div class="option">
+                        <input type="radio" name="q11-4" id="q11-4-A">
+                        <label for="q11-4-A">She worked as an interpreter in a company.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-4" id="q11-4-B">
+                        <label for="q11-4-B">She acted as a tourist guide on a trip to Mexico.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-4" id="q11-4-C">
+                        <label for="q11-4-C">She taught Spanish speakers how to speak English.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11-4" id="q11-4-D">
+                        <label for="q11-4-D">She volunteered to work in a Spanish charity group.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组11总结语 -->
+                <div class="group-summary">
+                    她觉得进度太慢，不得不学习已知的知识，这是一种不平衡的学习方式，于是她尝试教说西班牙语的人说英语。
+                </div>
+            </div>
+
+            <!-- 题组12 -->
+            <div class="question-group" data-group="12">
+                <div class="question" data-answer="B">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q12-1" id="q12-1-A">
+                        <label for="q12-1-A">They can gain a real experience of nature.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12-1" id="q12-1-B">
+                        <label for="q12-1-B">They may be more distant from actual nature.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12-1" id="q12-1-C">
+                        <label for="q12-1-C">They will know how distant they are truly from nature.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12-1" id="q12-1-D">
+                        <label for="q12-1-D">They can get to know the real meaning of nature experiences.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="A">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q12-2" id="q12-2-A">
+                        <label for="q12-2-A">Nature is very far away from them.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12-2" id="q12-2-B">
+                        <label for="q12-2-B">Nature is too mysterious to understand.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12-2" id="q12-2-C">
+                        <label for="q12-2-C">The nature in their parks and gardens is not precious.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12-2" id="q12-2-D">
+                        <label for="q12-2-D">The trees and flowers in their backyards are also part of nature.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q12-3" id="q12-3-A">
+                        <label for="q12-3-A">Children should learn a lot of knowledge about nature.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12-3" id="q12-3-B">
+                        <label for="q12-3-B">Parks and gardens are good places to experience nature.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12-3" id="q12-3-C">
+                        <label for="q12-3-C">Nature programs are good for adults but not good for children.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12-3" id="q12-3-D">
+                        <label for="q12-3-D">Real nature experiences come from physical contact with nature.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组12总结语 -->
+                <div class="group-summary">
+                    他们离真正的自然疏远，自然离他们很远，真正的自然体验来自于与自然的身体接触。
+                </div>
+            </div>
+
+            <!-- 题组13 -->
+            <div class="question-group" data-group="13">
+                <div class="question" data-answer="D">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q13-1" id="q13-1-A">
+                        <label for="q13-1-A">Salary tops the list of those factors that you should consider.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13-1" id="q13-1-B">
+                        <label for="q13-1-B">You should refuse the job offer if you find the salary insulting.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13-1" id="q13-1-C">
+                        <label for="q13-1-C">Salary is more important than benefits and working environment.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13-1" id="q13-1-D">
+                        <label for="q13-1-D">You should consider negotiating the salary if it is not what you expected.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q13-2" id="q13-2-A">
+                        <label for="q13-2-A">Whether the job requires working overtime.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13-2" id="q13-2-B">
+                        <label for="q13-2-B">Whether the job allows flexible working hours.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13-2" id="q13-2-C">
+                        <label for="q13-2-C">Whether the job has an irregular work schedule.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13-2" id="q13-2-D">
+                        <label for="q13-2-D">Whether the job requires hours beyond your norm.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="A">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q13-3" id="q13-3-A">
+                        <label for="q13-3-A">Take the time to thoroughly consider the job offer.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13-3" id="q13-3-B">
+                        <label for="q13-3-B">Give it a try and leave the job if it doesn’t work out.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13-3" id="q13-3-C">
+                        <label for="q13-3-C">Accept it if most other people believe it to be a perfect job.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13-3" id="q13-3-D">
+                        <label for="q13-3-D">Seek advice from experts to find an excellent match for you.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组13总结语 -->
+                <div class="group-summary">
+                    薪水不合预期应该谈判，同时了解工作是否超出正常范围的工时，这就需要花时间彻底考虑这份工作邀请。
+                </div>
+            </div>
+
+            <!-- 题组14 -->
+            <div class="question-group" data-group="14">
+                <div class="question" data-answer="D">
+                    <div class="question-number">1</div>
+                    <div class="option">
+                        <input type="radio" name="q14-1" id="q14-1-A">
+                        <label for="q14-1-A">Virtual images.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14-1" id="q14-1-B">
+                        <label for="q14-1-B">Virtual pastimes.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14-1" id="q14-1-C">
+                        <label for="q14-1-C">Online shopping.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14-1" id="q14-1-D">
+                        <label for="q14-1-D">Window shopping.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="D">
+                    <div class="question-number">2</div>
+                    <div class="option">
+                        <input type="radio" name="q14-2" id="q14-2-A">
+                        <label for="q14-2-A">News websites.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14-2" id="q14-2-B">
+                        <label for="q14-2-B">Music websites.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14-2" id="q14-2-C">
+                        <label for="q14-2-C">Travel websites.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14-2" id="q14-2-D">
+                        <label for="q14-2-D">Shopping websites.</label>
+                    </div>
+                </div>
+                <div class="question" data-answer="C">
+                    <div class="question-number">3</div>
+                    <div class="option">
+                        <input type="radio" name="q14-3" id="q14-3-A">
+                        <label for="q14-3-A">Women tend to spend more time wilfing on the Internet than men.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14-3" id="q14-3-B">
+                        <label for="q14-3-B">Women feel that wilfing damages the relationship with their families.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14-3" id="q14-3-C">
+                        <label for="q14-3-C">People under 25 were more likely to wilf than those aged 55 and above.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14-3" id="q14-3-D">
+                        <label for="q14-3-D">People between 25 and 55 are three times less likely to wilf than other age groups.</label>
+                    </div>
+                </div>
+                <!-- 新增：题组14总结语 -->
+                <div class="group-summary">
+                    在购物网站的橱窗购物，25 岁以下的人比 55 岁及以上的人更有可能进行 “漫无目的地浏览”。
+                </div>
+            </div>
+        </div>
+
+        <!-- 按钮组 -->
+        <div class="btn-group">
+            <button class="btn btn-home" onclick="backToHome()">返回首页</button>
+            <button class="btn btn-check" id="checkBtn">校对答案</button>
+            <button class="btn btn-next" id="nextBtn">下一组</button>
+        </div>
+
+        <!-- 结果提示 -->
+        <div class="result-tip" id="resultTip"></div>
+
+        <!-- 完成提示 -->
+        <div class="complete" id="completeTip">所有题组复习完成！</div>
+    </div>
+
+    <script>
+        // 获取元素
+        const questionGroups = document.querySelectorAll('.question-group');
+        const checkBtn = document.getElementById('checkBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const resultTip = document.getElementById('resultTip');
+        const completeTip = document.getElementById('completeTip');
+        const currentProgress = document.getElementById('current-progress');
+        const progressFill = document.getElementById('progress-fill');
+        let currentGroupIndex = 0; // 当前题组索引
+        const totalGroups = questionGroups.length; // 总题组数
+
+        // 更新进度显示
+        function updateProgress() {
+            const currentGroup = currentGroupIndex + 1;
+            currentProgress.textContent = `${currentGroup}/${totalGroups}`;
+            const progressPercentage = (currentGroup / totalGroups) * 100;
+            progressFill.style.width = `${progressPercentage}%`;
+        }
+
+        // 初始化进度显示
+        updateProgress();
+
+        // 校对答案功能
+        checkBtn.addEventListener('click', function() {
+            const currentGroup = questionGroups[currentGroupIndex];
+            const questions = currentGroup.querySelectorAll('.question');
+            const groupSummary = currentGroup.querySelector('.group-summary'); // 新增：获取当前题组总结语
+            let correctCount = 0;
+            let totalCount = questions.length;
+
+            // 遍历每个问题
+            questions.forEach(question => {
+                const correctAnswer = question.dataset.answer;
+                const options = question.querySelectorAll('.option');
+                let userAnswer = null;
+
+                // 找到用户选择的选项
+                options.forEach(option => {
+                    const input = option.querySelector('input');
+                    if (input.checked) {
+                        userAnswer = input.id.slice(-1); // 获取选项字母（A/B/C/D）
+                    }
+                });
+
+                // 标记正确/错误选项
+                options.forEach(option => {
+                    const input = option.querySelector('input');
+                    const optionLetter = input.id.slice(-1);
+
+                    // 清除之前的标记
+                    option.classList.remove('correct', 'incorrect');
+
+                    // 标记正确选项
+                    if (optionLetter === correctAnswer) {
+                        option.classList.add('correct');
+                    }
+
+                    // 标记用户错误选择
+                    if (userAnswer && optionLetter === userAnswer && userAnswer !== correctAnswer) {
+                        option.classList.add('incorrect');
+                    }
+                });
+
+                // 统计正确数
+                if (userAnswer === correctAnswer) {
+                    correctCount++;
+                }
+            });
+
+            // 显示结果提示
+            resultTip.style.display = 'block';
+            resultTip.textContent = `本次正确率：${correctCount}/${totalCount}（${Math.round((correctCount/totalCount)*100)}%）`;
+
+            // 新增：显示当前题组总结语
+            if (groupSummary) {
+                groupSummary.style.display = 'block';
+            }
+
+            // 禁用校对按钮，显示下一组按钮
+            checkBtn.disabled = true;
+            checkBtn.style.opacity = '0.6';
+            nextBtn.style.display = 'inline-block';
+        });
+
+        // 下一组功能
+        nextBtn.addEventListener('click', function() {
+            // 隐藏当前题组及总结语
+            const currentGroup = questionGroups[currentGroupIndex];
+            const currentGroupSummary = currentGroup.querySelector('.group-summary');
+            if (currentGroupSummary) {
+                currentGroupSummary.style.display = 'none'; // 隐藏当前总结语
+            }
+            currentGroup.classList.remove('active');
+
+            // 更新当前题组索引
+            currentGroupIndex++;
+
+            // 判断是否完成所有题组
+            if (currentGroupIndex >= questionGroups.length) {
+                completeTip.style.display = 'block';
+                checkBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+                resultTip.style.display = 'none';
+                return;
+            }
+
+            // 显示下一个题组
+            questionGroups[currentGroupIndex].classList.add('active');
+
+            // 更新进度显示
+            updateProgress();
+
+            // 重置按钮和提示
+            checkBtn.disabled = false;
+            checkBtn.style.opacity = '1';
+            nextBtn.style.display = 'none';
+            resultTip.style.display = 'none';
+
+            // 清除下一组题目的选中状态和样式
+            const nextGroupQuestions = questionGroups[currentGroupIndex].querySelectorAll('.question');
+            nextGroupQuestions.forEach(question => {
+                const options = question.querySelectorAll('.option');
+                options.forEach(option => {
+                    const input = option.querySelector('input');
+                    input.checked = false;
+                    option.classList.remove('correct', 'incorrect');
+                });
+            });
+        });
+
+    // 开始练习函数
+    function startPractice() {
+        document.getElementById('welcome-page').classList.remove('active');
+        document.getElementById('practice-page').classList.add('active');
+    }
+
+    // 返回欢迎页面函数
+    function backToHome() {
+        // 切换回欢迎页面
+        document.getElementById('practice-page').classList.remove('active');
+        document.getElementById('welcome-page').classList.add('active');
+        
+        // 重置当前题组索引
+        currentGroupIndex = 0;
+        
+        // 重置所有题组的状态
+        questionGroups.forEach((group, index) => {
+            if (index === 0) {
+                group.classList.add('active');
+            } else {
+                group.classList.remove('active');
+            }
+            
+            // 重置题目状态
+            const questions = group.querySelectorAll('.question');
+            questions.forEach(question => {
+                const options = question.querySelectorAll('.option');
+                options.forEach(option => {
+                    const input = option.querySelector('input');
+                    input.checked = false;
+                    option.classList.remove('correct', 'incorrect');
+                });
+            });
+            
+            // 隐藏总结语
+            const groupSummary = group.querySelector('.group-summary');
+            if (groupSummary) {
+                groupSummary.style.display = 'none';
+            }
+        });
+        
+        // 重置进度显示
+        updateProgress();
+        
+        // 重置按钮和提示
+        checkBtn.disabled = false;
+        checkBtn.style.opacity = '1';
+        nextBtn.style.display = 'none';
+        resultTip.style.display = 'none';
+        completeTip.style.display = 'none';
+    }
+</script>
+</body>
+</html>
