@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 优化视口设置，禁止缩放，确保移动端显示正常 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>科目三 C2 灯光操作全表小测试</title>
     <style>
         * {
@@ -10,6 +11,9 @@
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+            /* 移除移动端点击高亮 */
+            -webkit-tap-highlight-color: transparent;
+            tap-highlight-color: transparent;
         }
 
         :root {
@@ -28,17 +32,22 @@
         html, body {
             width: 100%;
             min-height: 100vh;
+            /* 防止移动端滚动回弹 */
+            overflow-x: hidden;
         }
 
         body {
             background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* 调整对齐方式，避免手机端内容被挤压 */
             padding: 20px 16px;
+            /* 移动端触摸优化 */
+            -webkit-overflow-scrolling: touch;
+            overflow-scrolling: touch;
         }
 
-        /* 全局卡片容器 */
+        /* 全局卡片容器 - 基础样式 */
         .container {
             background: #ffffff;
             border-radius: 24px;
@@ -49,6 +58,7 @@
             padding: 48px 40px;
             position: relative;
             overflow: hidden;
+            margin-top: 20px; /* 增加顶部间距，适配手机状态栏 */
         }
 
         /* 页面切换动画 */
@@ -108,6 +118,8 @@
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             outline: none;
+            /* 移动端触摸优化 */
+            touch-action: manipulation;
         }
 
         .btn-primary {
@@ -192,6 +204,9 @@
             padding: 18px 24px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            /* 增大触摸区域 */
+            min-height: 70px;
+            touch-action: manipulation;
         }
 
         .option-item:hover {
@@ -340,37 +355,187 @@
             color: var(--danger);
         }
 
-        /* 移动端适配 */
-        @media (max-width: 600px) {
+        /* 平板适配 (768px以下) */
+        @media (max-width: 768px) {
             .container {
-                padding: 32px 24px;
+                padding: 36px 28px;
+                border-radius: 22px;
+                min-height: 540px;
+                margin-top: 15px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .question-title {
+                font-size: 21px;
+            }
+
+            .score-display {
+                font-size: 66px;
+            }
+
+            .result-detail {
+                max-height: 380px;
+            }
+        }
+
+        /* 手机端适配 (600px以下) - 重点优化 */
+        @media (max-width: 600px) {
+            body {
+                padding: 12px 8px;
+                align-items: flex-start;
+            }
+
+            .container {
+                padding: 32px 20px;
                 border-radius: 20px;
+                min-height: calc(100vh - 40px); /* 适配手机全屏 */
+                margin-top: 10px;
+                box-shadow: 0 6px 20px rgba(22, 93, 255, 0.08);
+            }
+
+            /* 主页优化 */
+            #homePage {
+                min-height: calc(100vh - 80px);
+                justify-content: center;
+                padding: 20px 0;
             }
 
             h1 {
                 font-size: 24px;
+                margin-bottom: 12px;
+                padding: 0 10px;
+            }
+
+            .home-desc {
+                font-size: 15px;
+                margin-bottom: 40px;
+                padding: 0 15px;
+                line-height: 1.6;
+            }
+
+            /* 按钮优化 - 手机端全屏宽度更友好 */
+            .btn {
+                padding: 16px 0;
+                font-size: 17px;
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .btn-small {
+                padding: 14px 20px;
+                font-size: 15px;
+                min-width: 120px;
+            }
+
+            /* 答题页优化 */
+            .quiz-header {
+                margin-bottom: 24px;
+            }
+
+            .progress-text {
+                font-size: 13px;
             }
 
             .question-title {
                 font-size: 20px;
+                margin-bottom: 24px;
+                line-height: 1.7;
+            }
+
+            /* 选项优化 - 增大触摸区域 */
+            .option-item {
+                padding: 18px 16px;
+                min-height: 75px;
+            }
+
+            .option-label {
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
+                margin-right: 12px;
+            }
+
+            .option-text {
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            .options-container {
+                gap: 12px;
+                margin-bottom: 32px;
+            }
+
+            /* 导航按钮优化 */
+            .nav-buttons {
+                gap: 10px;
+            }
+
+            /* 结果页优化 */
+            .result-title {
+                font-size: 24px;
             }
 
             .score-display {
                 font-size: 60px;
+                margin: 16px 0;
             }
 
-            .btn {
-                padding: 14px 36px;
-                font-size: 16px;
+            .score-comment {
+                font-size: 17px;
+                margin-bottom: 24px;
+                padding: 0 10px;
+            }
+
+            .result-detail {
+                max-height: 320px;
+                margin-bottom: 24px;
+            }
+
+            .result-item {
+                padding: 16px;
+                margin-bottom: 12px;
+            }
+
+            .result-question {
+                font-size: 15px;
+                margin-bottom: 8px;
+            }
+
+            .result-answer {
+                font-size: 13px;
+            }
+        }
+
+        /* 小屏手机适配 (375px以下) */
+        @media (max-width: 375px) {
+            .container {
+                padding: 28px 16px;
+                min-height: calc(100vh - 30px);
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .question-title {
+                font-size: 18px;
+            }
+
+            .score-display {
+                font-size: 54px;
             }
 
             .btn-small {
-                padding: 10px 24px;
-                font-size: 15px;
+                padding: 12px 16px;
+                font-size: 14px;
+                min-width: 100px;
             }
 
-            .option-item {
-                padding: 16px 18px;
+            .result-detail {
+                max-height: 280px;
             }
         }
     </style>
@@ -549,6 +714,8 @@
             if (userAnswers[currentQuestionIndex] === index) {
                 optionDiv.classList.add('selected');
             }
+            // 移动端触摸事件优化
+            optionDiv.addEventListener('touchstart', () => selectOption(index));
             optionDiv.onclick = () => selectOption(index);
             
             optionDiv.innerHTML = `
@@ -649,6 +816,13 @@
     function restartQuiz() {
         switchPage('homePage');
     }
+
+    // 移动端适配：监听屏幕旋转，重新渲染页面
+    window.addEventListener('orientationchange', () => {
+        if (document.getElementById('quizPage').classList.contains('active')) {
+            showQuestion();
+        }
+    });
 </script>
 
 </body>
